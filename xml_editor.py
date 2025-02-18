@@ -12,8 +12,12 @@ logging.basicConfig(level=logging.INFO, format='%(message)s', handlers=[
 ])
 
 def load_xml(file_path):
-    tree = ET.parse(file_path)
-    return tree, tree.getroot()
+    try:
+        tree = ET.parse(file_path)
+        return tree, tree.getroot()
+    except ET.ParseError as e:
+        logging.error(f"Failed to parse {file_path}: {e}")
+        return None, None
 
 def save_xml(tree, file_path):
     ET.indent(tree, space="  ", level=0)
@@ -77,14 +81,17 @@ def process_xml_files(file_paths):
     for file_path in file_paths:
         logging.info(f"Processing file: {file_path}")
         tree, root = load_xml(file_path)
+        if tree is None or root is None:
+            continue
 
         # Example operations
-        add_tag(root, './/Service/Engine/Host', 'Context', {'path': '/myapp', 'docBase': 'myapp'})
+        # add_tag(root, './/Service/Engine/Host', 'Context', {'path': '/myapp', 'docBase': 'myapp'})
         # remove_tag(root, './/Service/Engine/Host/Valve', 'className', 'org.apache.catalina.valves.AccessLogValve')
         # add_attribute(root, './/Service', 'newAttribute', 'newValue')
         # update_attribute(root, './/Service', 'surname', 'updatedSurname')
         # remove_attribute(root, './/Service', 'newAttribute')
 
+        remove_tag(root, './/Service/Connector', 'protocol', 'HTTP/1.1')
         save_xml(tree, file_path)
 
 if __name__ == "__main__":
