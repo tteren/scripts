@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 import xml.etree.ElementTree as ET
 import glob
 import os
@@ -91,8 +90,11 @@ def process_xml_files(file_paths):
         # update_attribute(root, './/Service', 'surname', 'updatedSurname')
         # remove_attribute(root, './/Service', 'newAttribute')
 
-        remove_tag(root, './/Service/Connector', 'protocol', 'HTTP/1.1')
+        #remove_tag(root, './/Service/Connector', 'protocol', 'HTTP/1.1')
+        #add_tag(root, './/Service/Engine/Host', 'Valve', {'className': 'org.apache.catalina.valves.ErrorReportValve', 'showReport': 'false', 'showServerInfo': 'false'})
+        
         save_xml(tree, file_path)
+
 
 if __name__ == "__main__":
     logging.info(f'\n\n****** Started at: {datetime.now()} ******')
@@ -102,3 +104,4 @@ if __name__ == "__main__":
 
     process_xml_files(xml_file_paths)
     logging.info(f'****** Finished at: {datetime.now()} ******')
+    
